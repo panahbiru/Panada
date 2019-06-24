@@ -161,4 +161,48 @@ class Database extends Native
     {
         return $this->sessionDbConn->where('session_expiration', '<', time())->delete($this->sessionDbName);
     }
+    
+    /**
+     * Get Session ID
+     *
+     */
+    public function sessionId()
+    {
+        parse_str( $_SERVER['HTTP_COOKIE'], $sesId);
+        return $sesId['PHPSESSID'];
+    }
+
+    /**
+     * Save new session
+     *
+     * @param string|array
+     * @param string|array|object
+     * @return void
+     */
+    public function setValue($name, $value = '')
+    {    
+        if( \is_array($name) ) {
+            foreach($name AS $key => $val)
+            $_SESSION[$key] = $val;
+        }
+        else {
+            $_SESSION[$name] = $value;
+        }
+
+        $this->sessionWrite( $this->sessionId(), json_encode($_SESSION) );
+    }
+
+    /**
+     * Get the session vale.
+     *
+     * @param string
+     * @return string|array|object
+     */
+    public function getValue($name)
+    {    
+        $session_data = $this->sessionRead( $this->sessionId() );
+        $session_data = json_decode($session_data);
+
+        return $session_data->$name;
+    }
 }
