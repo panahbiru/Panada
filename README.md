@@ -1,4 +1,4 @@
-> This repo is contain of Panada version 1 forked from https://github.com/panada/, maintained to be compatibility to PHP 7.3
+> This repo is contain of Panada version 1 forked from https://github.com/panada/, maintained to be compatible to PHP 7.3
 
 About Panada
 ------------
