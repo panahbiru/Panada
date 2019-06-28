@@ -168,8 +168,29 @@ class Database extends Native
      */
     public function sessionId()
     {
-        parse_str( $_SERVER['HTTP_COOKIE'], $sesId);
-        return $sesId['PHPSESSID'];
+        $httpcookie = str_replace('; ','&', $_SERVER['HTTP_COOKIE']);
+        parse_str( $httpcookie, $sesId);
+        //print_r($httpcookie);
+        if( !empty($sesId['PHPSESSID']) ){
+            return $sesId['PHPSESSID'];
+        }elseif( !empty($sesId['PAN_SID'])){
+            return $sesId['PAN_SID'];
+        }elseif( !empty($sesId['sessions']) ){
+            return $sesId['sessions'];
+        }else{
+            @session_start();
+            $httpcookie = str_replace('; ','&', $_SERVER['HTTP_COOKIE']);
+            //print_r($httpcookie);
+            parse_str( $httpcookie, $sesId);
+
+            if( !empty($sesId['PHPSESSID']) ){
+                return $sesId['PHPSESSID'];
+            }elseif( !empty($sesId['PAN_SID'])){
+                return $sesId['PAN_SID'];
+            }elseif( !empty($sesId['sessions']) ){
+                return $sesId['sessions'];
+            }
+        }
     }
 
     /**
